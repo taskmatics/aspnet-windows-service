@@ -25,7 +25,6 @@ namespace MyDnxService
         {
             try
             {
-
                 if (args.Contains("--windows-service"))
                 {
                     Run(this);
