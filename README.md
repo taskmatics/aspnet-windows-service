@@ -5,8 +5,12 @@ This repository provides a shell project you can use to get a Windows service up
 
 ### Installation
 
+#### 0. Run a Command Prompt as Administrator
+This is needed in order to run the `install` command.
+
 #### 1. Clone the repository
 Run `git clone https://github.com/taskmatics/aspnet-windows-service`
+Run `cd aspnet-windows-service`
 
 #### 2. Install the service
 Run `install <optional-service-name>` (`AspNetWindowsService` is used by default for the name)
