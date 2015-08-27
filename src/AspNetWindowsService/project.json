@@ -1,0 +1,20 @@
+﻿{
+    "version": "1.0.0-*",
+    "description": "Shell project for hosting ASP.NET in a Windows service",
+    "commands": {
+        "run": "AspNetWindowsService"
+    },
+    "frameworks": {
+        "dnx451": {
+            "frameworkAssemblies": {
+                "System.ServiceProcess": "4.0.0.0"
+            }
+        }
+    },
+    "dependencies": {
+        "Microsoft.AspNet.Hosting": "1.0.0-beta6",
+        "Microsoft.AspNet.Server.WebListener": "1.0.0-beta6",
+        "Microsoft.AspNet.StaticFiles": "1.0.0-beta6",
+        "Microsoft.AspNet.Mvc": "6.0.0-beta6"
+    }
+}
