@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4AEF0F43-655C-4AE2-ADB1-3993A0895B6F}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		src\AspNetWindowsService\global.json = src\AspNetWindowsService\global.json
 		NuGet.Config = NuGet.Config
 	EndProjectSection
 EndProject

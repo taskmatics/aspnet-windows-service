@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Hosting.Internal;
 using Microsoft.Framework.Configuration;
+using Microsoft.Framework.Configuration.Memory;
 using Microsoft.Framework.DependencyInjection;
 using System;
 using System.Diagnostics;
@@ -44,11 +45,12 @@ namespace MyDnxService
 
         protected override void OnStart(string[] args)
         {
-            var config = new ConfigurationBuilder(new MemoryConfigurationSource()).Build();
-            config.Set("server.urls", "http://localhost:5000");
+            var configSource = new MemoryConfigurationSource();
+            configSource.Add("server.urls", "http://localhost:5000");
 
+            var config = new ConfigurationBuilder(configSource).Build();
             var builder = new WebHostBuilder(_serviceProvider, config);
-            builder.UseServer("Microsoft.AspNet.Server.WebListener");
+            builder.UseServer("Microsoft.AspNet.Server.Kestrel");
             builder.UseServices(services => services.AddMvc());
             builder.UseStartup(appBuilder =>
             {
