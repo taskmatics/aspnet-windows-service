@@ -29,6 +29,7 @@ namespace MyDnxService
                 if (args.Contains("--windows-service"))
                 {
                     Run(this);
+                    Debug.WriteLine("Exiting");
                     return;
                 }
 
@@ -45,22 +46,32 @@ namespace MyDnxService
 
         protected override void OnStart(string[] args)
         {
-            var configSource = new MemoryConfigurationSource();
-            configSource.Add("server.urls", "http://localhost:5000");
-
-            var config = new ConfigurationBuilder(configSource).Build();
-            var builder = new WebHostBuilder(_serviceProvider, config);
-            builder.UseServer("Microsoft.AspNet.Server.Kestrel");
-            builder.UseServices(services => services.AddMvc());
-            builder.UseStartup(appBuilder =>
+            try
             {
-                appBuilder.UseDefaultFiles();
-                appBuilder.UseStaticFiles();
-                appBuilder.UseMvc();
-            });
+                Microsoft.Dnx.Runtime.Infrastructure.CallContextServiceLocator.Locator.ServiceProvider = _serviceProvider;
 
-            _hostingEngine = builder.Build();
-            _shutdownServerDisposable = _hostingEngine.Start();
+                var configProvider = new MemoryConfigurationProvider();
+                configProvider.Add("server.urls", "http://localhost:5000");
+
+                var config = new ConfigurationBuilder(configProvider).Build();
+                var builder = new WebHostBuilder(_serviceProvider, config);
+                builder.UseServer("Microsoft.AspNet.Server.Kestrel");
+                builder.UseServices(services => services.AddMvc());
+                builder.UseStartup(appBuilder =>
+                {
+                    appBuilder.UseDefaultFiles();
+                    appBuilder.UseStaticFiles();
+                    appBuilder.UseMvc();
+                });
+
+                _hostingEngine = builder.Build();
+                _shutdownServerDisposable = _hostingEngine.Start();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("error in OnStart: " + ex);
+                throw;
+            }
         }
 
         protected override void OnStop()
