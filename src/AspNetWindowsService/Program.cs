@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Hosting.Internal;
-using Microsoft.Framework.Configuration;
-using Microsoft.Framework.Configuration.Memory;
-using Microsoft.Framework.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Memory;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -13,14 +13,7 @@ namespace MyDnxService
 {
     public class Program : ServiceBase
     {
-        private readonly IServiceProvider _serviceProvider;
-        private IHostingEngine _hostingEngine;
-        private IDisposable _shutdownServerDisposable;
-
-        public Program(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+        private IApplication _application;
 
         public void Main(string[] args)
         {
@@ -48,13 +41,14 @@ namespace MyDnxService
         {
             try
             {
-                Microsoft.Dnx.Runtime.Infrastructure.CallContextServiceLocator.Locator.ServiceProvider = _serviceProvider;
-
                 var configProvider = new MemoryConfigurationProvider();
                 configProvider.Add("server.urls", "http://localhost:5000");
 
-                var config = new ConfigurationBuilder(configProvider).Build();
-                var builder = new WebHostBuilder(_serviceProvider, config);
+                var config = new ConfigurationBuilder()
+                    .Add(configProvider)
+                    .Build();
+
+                var builder = new WebHostBuilder(config);
                 builder.UseServer("Microsoft.AspNet.Server.Kestrel");
                 builder.UseServices(services => services.AddMvc());
                 builder.UseStartup(appBuilder =>
@@ -64,8 +58,8 @@ namespace MyDnxService
                     appBuilder.UseMvc();
                 });
 
-                _hostingEngine = builder.Build();
-                _shutdownServerDisposable = _hostingEngine.Start();
+                var hostingEngine = builder.Build();
+                _application = hostingEngine.Start();
             }
             catch (Exception ex)
             {
@@ -76,8 +70,7 @@ namespace MyDnxService
 
         protected override void OnStop()
         {
-            if (_shutdownServerDisposable != null)
-                _shutdownServerDisposable.Dispose();
+            _application?.Dispose();
         }
     }
 }
