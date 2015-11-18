@@ -15,20 +15,21 @@ namespace MyDnxService
     {
         private IApplication _application;
 
-        public void Main(string[] args)
+        public static void Main(string[] args)
         {
             try
             {
                 if (args.Contains("--windows-service"))
                 {
-                    Run(this);
+                    Run(new Program());
                     Debug.WriteLine("Exiting");
                     return;
                 }
 
-                OnStart(null);
+                var program = new Program();
+                program.OnStart(null);
                 Console.ReadLine();
-                OnStop();
+                program.OnStop();
             }
             catch (Exception ex)
             {
