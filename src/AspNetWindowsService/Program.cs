@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Hosting.Internal;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.Memory;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNet.Hosting;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -13,7 +8,7 @@ namespace MyDnxService
 {
     public class Program : ServiceBase
     {
-        private IApplication _application;
+        private StopApplication _stopApplication;
 
         public static void Main(string[] args)
         {
@@ -42,25 +37,10 @@ namespace MyDnxService
         {
             try
             {
-                var configProvider = new MemoryConfigurationProvider();
-                configProvider.Add("server.urls", "http://localhost:5000");
-
-                var config = new ConfigurationBuilder()
-                    .Add(configProvider)
-                    .Build();
-
-                var builder = new WebHostBuilder(config);
-                builder.UseServer("Microsoft.AspNet.Server.Kestrel");
-                builder.UseServices(services => services.AddMvc());
-                builder.UseStartup(appBuilder =>
-                {
-                    appBuilder.UseDefaultFiles();
-                    appBuilder.UseStaticFiles();
-                    appBuilder.UseMvc();
+                _stopApplication = WebApplication.Run(new[] {
+                    "server.urls=http://localhost:5000",
+                    "server=Microsoft.AspNet.Server.Kestrel"
                 });
-
-                var hostingEngine = builder.Build();
-                _application = hostingEngine.Start();
             }
             catch (Exception ex)
             {
@@ -71,7 +51,7 @@ namespace MyDnxService
 
         protected override void OnStop()
         {
-            _application?.Dispose();
+            _stopApplication?.Invoke();
         }
     }
 }
