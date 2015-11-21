@@ -3,5 +3,5 @@ if "%service_name%"=="" (set service_name=AspNetWindowsService)
 
 call dnu restore src\AspNetWindowsService
 call dnu publish src\AspNetWindowsService --out publish-output --runtime active --no-source
-sc create %service_name% binPath= "\"%~dp0publish-output\approot\svc.cmd\" --windows-service"
+sc create %service_name% binPath= "\"%~dp0publish-output\approot\svc.cmd\""
 sc start %service_name%
