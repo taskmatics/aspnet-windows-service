@@ -1,7 +1,7 @@
 aspnet-windows-service
 =======
 
-This repository provides a shell project you can use to get a Windows service up running hosting ASP.NET 5 with static files and MVC 6.
+This repository provides a shell project that you can use to get a Windows service hosting ASP.NET 5 with static files and MVC 6.
 
 For detailed information, please read the following post: [How to Host ASP.NET in a Windows Service](http://taskmatics.com/blog/host-asp-net-in-a-windows-service/)
 
@@ -24,9 +24,9 @@ This command does a few things:
 * Starts the service
 
 #### Browsing the Website
-To view static content (from `index.html`), launch a browser a pull up `http://localhost:5000`. The port is configurable in code in the `src\Program.cs`.
+To view static content (from `index.html`), launch a browser and navigate to `http://localhost:5000`. The port is configurable in code in the `src\Program.cs`.
 
-To view MVC output (from `TimeController`), launch a browser a pull up `http://localhost:5000/time`. The port is configurable in code in the `src\Program.cs`.
+To view MVC output (from `TimeController`), launch a browser and navigate to `http://localhost:5000/time`. The port is configurable in code in the `src\Program.cs`.
 
 #### Uninstalling
 Run `uninstall <optional-service-name>` (The name must match the one used during install.)
